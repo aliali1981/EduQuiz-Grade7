@@ -7,41 +7,157 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2e59d9; --secondary: #4e73df; --success: #1cc88a;
-            --error: #e74a3b; --warning: #f6c23e; --light: #f8f9fc;
+            --primary: #2e59d9; 
+            --secondary: #4e73df; 
+            --success: #1cc88a;
+            --error: #e74a3b; 
+            --warning: #f6c23e; 
+            --light: #f8f9fc;
+            --dark-blue: #1e3a8a;
         }
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .quiz-container { width: 100%; max-width: 900px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px; text-align: center; border-bottom: 5px solid var(--warning); }
-        .stats-bar { display: flex; justify-content: space-around; padding: 10px; background: #eaecf4; font-weight: bold; font-size: 0.9rem; }
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: linear-gradient(120deg, #e0e8f5 0%, #f5f7fa 100%); 
+            margin: 0; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+        }
+        .quiz-container { 
+            width: 100%; 
+            max-width: 900px; 
+            background: white; 
+            border-radius: 24px; 
+            box-shadow: 0 15px 35px rgba(46, 89, 217, 0.15); 
+            overflow: hidden; 
+            border: 1px solid rgba(227, 230, 240, 0.8);
+        }
+        .header { 
+            background: linear-gradient(135deg, var(--dark-blue), var(--primary)); 
+            color: white; 
+            padding: 30px 20px; 
+            text-align: center; 
+            border-bottom: 6px solid var(--warning); 
+            position: relative;
+        }
+        .header h1 { margin: 0; font-size: 1.8rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        .header p { margin: 10px 0 0; font-size: 1.1rem; opacity: 0.9; }
+        
+        .stats-bar { 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center;
+            padding: 15px; 
+            background: #f4f6fc; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            border-bottom: 2px solid #e3e6f0;
+            color: #4e5e80;
+        }
+        .stat-item { display: flex; align-items: center; gap: 6px; background: white; padding: 6px 16px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
         .content-area { padding: 30px; }
-        .reading-text { background: #fff9e6; border-right: 6px solid var(--warning); padding: 20px; border-radius: 10px; margin-bottom: 25px; font-size: 1.1rem; line-height: 1.8; color: #333; white-space: pre-line; }
-        .question-box { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .option-btn { background: white; border: 2px solid #e3e6f0; padding: 18px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 1.1rem; font-family: 'Tajawal'; font-weight: 500; }
-        .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
-        .option-btn.correct { background: var(--success); color: white; border-color: var(--success); }
-        .option-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
-        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: 600; }
-        .footer { padding: 20px; text-align: left; border-top: 1px solid #eee; }
-        .btn-next { background: var(--primary); color: white; border: none; padding: 12px 35px; border-radius: 30px; cursor: pointer; display: none; font-family: 'Tajawal'; font-weight: bold; }
-        .result-screen { text-align: center; padding: 50px; display: none; }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 20px; font-weight: bold; }
-        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+        .reading-text { 
+            background: #fffcf0; 
+            border-right: 6px solid var(--warning); 
+            padding: 22px; 
+            border-radius: 14px; 
+            margin-bottom: 25px; 
+            font-size: 1.15rem; 
+            line-height: 1.9; 
+            color: #2b2d42; 
+            white-space: pre-line;
+            box-shadow: inset 0 0 10px rgba(246, 194, 62, 0.05);
+        }
+        .question-box { font-size: 1.35rem; font-weight: 700; color: var(--dark-blue); margin-bottom: 22px; display: flex; align-items: flex-start; gap: 8px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        
+        .option-btn { 
+            background: white; 
+            border: 2px solid #e3e6f0; 
+            padding: 20px; 
+            border-radius: 16px; 
+            cursor: pointer; 
+            transition: all 0.25s ease; 
+            font-size: 1.1rem; 
+            font-family: 'Tajawal'; 
+            font-weight: 500; 
+            color: #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            text-align: right;
+        }
+        .option-btn:hover { 
+            border-color: var(--secondary); 
+            background: #f0f4ff; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(78, 115, 223, 0.1);
+        }
+        .option-btn.correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; font-weight: 700; }
+        .option-btn.wrong { background: var(--error) !important; color: white !important; border-color: var(--error) !important; font-weight: 700; }
+        
+        .feedback { 
+            margin-top: 20px; 
+            padding: 18px; 
+            border-radius: 12px; 
+            display: none; 
+            font-weight: 600; 
+            font-size: 1.05rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .footer { padding: 20px 30px; text-align: left; border-top: 2px solid #f0f2f5; background: #fafbfe; }
+        
+        .btn-next { 
+            background: linear-gradient(135deg, var(--secondary), var(--primary)); 
+            color: white; 
+            border: none; 
+            padding: 14px 40px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            display: none; 
+            font-family: 'Tajawal'; 
+            font-weight: 700; 
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-next:hover { transform: scale(1.03); box-shadow: 0 7px 18px rgba(78, 115, 223, 0.4); }
+        
+        .result-screen { text-align: center; padding: 60px 30px; display: none; }
+        .score-circle { 
+            width: 160px; 
+            height: 160px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, var(--primary), var(--dark-blue)); 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 3.2rem; 
+            margin: 0 auto 25px; 
+            font-weight: 700; 
+            box-shadow: 0 10px 25px rgba(46, 89, 217, 0.4);
+            border: 5px solid var(--warning);
+        }
+        .timer-warning { color: var(--error) !important; animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } .header h1 { font-size: 1.5rem; } }
     </style>
 </head>
 <body>
 
 <div class="quiz-container">
     <div class="header">
-        <h1>مدرسة يزيد بن الحارث - الاختبار الشامل المطور</h1>
-        <p>50 سؤالاً متنوعاً باختيارات عشوائية الترتيب - الصف السابع</p>
+        <h1>🏫 مدرسة يزيد بن الحارث - الاختبار الشامل المطور</h1>
+        <p>📝 50 سؤالاً متنوعاً باختيارات تفاعلية عشوائية - الصف السابع</p>
     </div>
 
     <div class="stats-bar">
-        <span>السؤال: <span id="qCurrent">1</span> / 50</span>
-        <span>الدرجة: <span id="score">0</span></span>
-        <span>⏱️ <span id="timer">40</span> ث</span>
+        <div class="stat-item">📋 <span style="margin-right:5px;">السؤال: </span> <span id="qCurrent">1</span> / 50</div>
+        <div class="stat-item">⭐ <span style="margin-right:5px;">الدرجة: </span> <span id="score">0</span></div>
+        <div class="stat-item" id="timerContainer">⏱️ <span style="margin-right:5px;">المتبقي: </span> <span id="timer">40</span> ث</div>
     </div>
 
     <div id="quizBody" class="content-area"></div>
@@ -52,92 +168,96 @@
 
     <div id="resultPage" class="result-screen">
         <div class="score-circle" id="finalScore">0</div>
-        <h2>تم إنهاء الاختبار بنجاح!</h2>
-        <p>لقد راجعت كافة مهارات الاختبار القصير الثاني بكفاءة تامة.</p>
-        <button class="btn-next" style="display:inline-block" onclick="location.reload()">إعادة الاختبار 🔄</button>
+        <h2 style="color: var(--dark-blue); font-size: 2rem;">🎉 تم إنهاء الاختبار بنجاح! 🎉</h2>
+        <p style="font-size: 1.2rem; color: #555; margin-bottom: 30px;">لقد راجعت كافة مهارات الاختبار القصير الثاني بكفاءة وتميز.</p>
+        <button class="btn-next" style="display:inline-block" onclick="location.reload()">إعادة التحدي 🔄</button>
     </div>
 </div>
 
 <script>
-const textNusus = `نص (السلحفاة والبطتان):
+// الروابط الصوتية المدمجة ذاتياً مجاناً ومباشرة العمل
+const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-84.wav'); // صوت نجاح وتصفيق تشجيعي قصير
+const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-84.wav'); // صوت خطأ وتنبيه هادئ
+const audioTick = new Audio('https://assets.mixkit.co/active_storage/sfx/2547/2547-84.wav'); // دقات وقت
+const audioFinal = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-84.wav'); // صوت فوز جماعي للمستويات النهائية
+
+const textNusus = `📖 نص (السلحفاة والبطتان):
 1 - ثم قضى المهيمن القدير .. أن ينشف النبات والغدير
 2 - فساء فقد الماء السلحفاة .. فبدلت بنعمة بأساء
 3 - وقالتا: لا تحزني يا صاحبة .. إن الوفي ليس ينسى صاحبه
 4 - الماء في واد قريب من هنا .. نمشي إليه بالسرور والهنا
 5 - فقالتا: نحمل في كتفينا .. عوداً متيناً يابساً أو لينا`;
 
-const textNahw = `فقرة النحو (قصة غاندي):
-يُحكى أنّ المهاتما غاندي كان يركض بسرعة رغبة في اللحاق بالقطار، والذي كان قد بدأ بالتحرك صباحاً، ولكن إحدى فردتي حذائه سقطت أثناء صعوده على متن القطار، فخلع فردة حذائه الثانية, ورماها قريباً من الفردة الأولى. فقال غاندي لأخيه الإنسان: "أردتُ للفقير الذي يجد الحذاء أن يجد الفردتين كي يكون قادراً على استخدامهما، فهو لن يستفيد إن وجد فردةً واحدةً ، كما أنّني لن أستفيد منها أيضاً".`;
+const textNahw = `✍️ فقرة النحو (قصة غاندي):
+يُحكى أنّ المهاتما غاندي كان يركض بسرعة رغبة في اللحاق بالقطار، والذي كان قد بدأ بالتحرك صباحاً، ولكن إحدى فردتي حذائه سقطت أثناء صعوده على متن القطار، فخلع فردة حذائه الثانية، ورماها قريباً من الفردة الأولى. فقال غاندي لأخيه الإنسان: "أردتُ للفقير الذي يجد الحذاء أن يجد الفردتين كي يكون قادراً على استخدامهما، فهو لن يستفيد إن وجد فردةً واحدةً ، كما أنّني لن أستفيد منها أيضاً".`;
 
-const textImla = `فقرة الإملاء:
+const textImla = `✏️ فقرة الإملاء والتلقين:
 مر رجل بآخر يحفر في الصحراء، فقال له: "ما بك أيها الرجل، ولماذا تحفر؟" قال: "إنّي دفنت في هذه الصحراء بعضاً من المال، ولست أهتدي إلى مكانه". فقال له: "كان يجب أن تجعل عليه علامة". قال: "قد فعلت". قال: "وما هي العلامة؟" قال: "غيمة في السماء كانت تظلها، ولست أرى العلامة الآن".`;
 
-// بنك الأسئلة الأساسي (تم الاحتفاظ بنصوص الإجابات لتتم عشوائيتها برمجياً)
 const questions = [
     // النصوص (1-17)
-    { t: textNusus, q: "استخرج من الأبيات كلمة معناها (يجف):", o: ["ينشف", "قضى", "ساء", "بدلت"], corrText: "ينشف", f: "كلمة ينشف تعني يجف كما ورد في البيت الأول." },
-    { t: textNusus, q: "نوع الأسلوب في قول الشاعر (لا تحزني):", o: ["نهي", "أمر", "نداء", "نفي"], corrText: "نهي", f: "هذا أسلوب نهي للكف عن الحزن." },
-    { t: textNusus, q: "البيت الذي يمثل معنى 'الصديق الوفي لا يتخلى عن صاحبه':", o: ["البيت الثالث", "البيت الأول", "البيت الثاني", "البيت الرابع"], corrText: "البيت الثالث", f: "البيت الثالث يوضح أن الوفي لا ينسى صاحبه." },
-    { t: textNusus, q: "ما ضد كلمة (يابساً) الواردة في البيت الخامس؟", o: ["ليناً", "متيناً", "عوداً", "كتفينا"], corrText: "ليناً", f: "اللين هو ضد اليبوسة." },
-    { t: textNusus, q: "من أسماء الله الحسنى في البيت الأول؟", o: ["المهيمن", "القدير", "كلتا الإجابتين صحيحة", "الوفـي"], corrText: "كلتا الإجابتين صحيحة", f: "ورد في البيت الأول 'المهيمن القدير'." },
-    { t: textNusus, q: "ما سبب حزن السلحفاة كما يفهم من البيت الثاني؟", o: ["جفاف الماء", "فقد الغدير", "تغير النعمة إلى بأساء", "كل ما سبق"], corrText: "كل ما سبق", f: "كل هذه الأسباب أدت لسوء حال السلحفاة." },
-    { t: textNusus, q: "كيف وصفت البطتان الوادي الجديد في البيت الرابع؟", o: ["بالقريب", "بالبعيد", "بالكبير", "بالعميق"], corrText: "بالقريب", f: "وصفتاه بأنه 'وادٍ قريب'." },
-    { t: textNusus, q: "ما هي الأداة التي ستستخدم لنقل السلحفاة؟", o: ["عود متين", "جناح البطتان", "سلة كبيرة", "حبل قوي"], corrText: "عود متين", f: "اقترحت البطتان حمل 'عود متين'." },
-    { t: textNusus, q: "كلمة (الهنا) في البيت الرابع مرادفها:", o: ["الفرح والسرور", "التعب", "الخوف", "الحزن"], corrText: "الفرح والسرور", f: "الهنا تعني السعادة والسرور." },
-    { t: textNusus, q: "الشعور السائد في البيت الرابع هو:", o: ["التفاؤل والسرور", "اليأس", "الغضب", "الدهشة"], corrText: "التفاؤل والسرور", f: "يدل البيت على السرور والهنا." },
-    { t: textNusus, q: "معنى كلمة (قضى) في البيت الأول:", o: ["حكم وأمر", "انتهى", "مات", "ذهب"], corrText: "حكم وأمر", f: "قضى هنا بمعنى حكم الله وقدره." },
-    { t: textNusus, q: "ما العلاقة بين (نعمة) و (بأساء)؟", o: ["تضاد", "ترادف", "تكامل", "تشابه"], corrText: "تضاد", f: "النعمة ضدها البأساء والشدة." },
-    { t: textNusus, q: "لماذا وصفت البطتان العود بأنه (متين)？", o: ["ليتحمل وزن السلحفاة", "لأنه لين", "لأنه طويل", "لأنه جميل"], corrText: "ليتحمل وزن السلحفاة", f: "المتانة ضرورية لحمل السلحفاة." },
-    { t: textNusus, q: "كلمة (صاحبة) في البيت الثالث تعرب:", o: ["منادى", "فاعل", "مفعول به", "مبتدأ"], corrText: "منادى", f: "جاءت بعد أداة النداء المحذوفة أو المذكورة (يا صاحبة)." },
-    { t: textNusus, q: "الفعل (نمشي) في البيت الرابع يدل على:", o: ["الحركة والاستمرار", "السكون", "الماضي", "التوقف"], corrText: "الحركة والاستمرار", f: "الفعل المضارع يفيد التجدد والاستمرار." },
-    { t: textNusus, q: "الغرض من نص (السلحفاة والبطتان) هو الحث على:", o: ["الوفاء والتعاون", "الكسل", "الخداع", "الوحدة"], corrText: "الوفاء والتعاون", f: "النص يبرز وفاء البطتين لصاحبتهما." },
-    { t: textNusus, q: "كلمة (فبدلت) تدل على:", o: ["التغير المفاجئ", "الثبات", "الهدوء", "الانتظار"], corrText: "التغير المفاجئ", f: "تدل على تحول الحال من النعمة للبأساء." },
+    { t: textNusus, q: "استخرج من الأبيات كلمة معناها (يجف):", o: ["ينشف", "قضى", "ساء", "بدلت"], corrText: "ينشف", f: "💡 الإجابة الصحيحة: كلمة ينشف تعني يجف كما ورد في البيت الأول." },
+    { t: textNusus, q: "نوع الأسلوب في قول الشاعر (لا تحزني):", o: ["نهي", "أمر", "نداء", "نفي"], corrText: "نهي", f: "💡 الإجابة الصحيحة: هذا أسلوب نهي يفيد الكف عن الحزن واليأس." },
+    { t: textNusus, q: "البيت الذي يمثل معنى 'الصديق الوفي لا يتخلى عن صاحبه':", o: ["البيت الثالث", "البيت الأول", "البيت الثاني", "البيت الرابع"], corrText: "البيت الثالث", f: "💡 الإجابة الصحيحة: البيت الثالث يوضح أن الوفي لا ينسى صاحبه أبدًا." },
+    { t: textNusus, q: "ما ضد كلمة (يابساً) الواردة في البيت الخامس؟", o: ["ليناً", "متيناً", "عوداً", "كتفينا"], corrText: "ليناً", f: "💡 الإجابة الصحيحة: اللين هو ضد اليبوسة والجفاف." },
+    { t: textNusus, q: "كلمة معناها ( المسيطر ) في البيت الأول:", o: ["المهيمن", "القدير", "النبات", "الغدير"], corrText: "المهيمن", f: "💡 الإجابة الصحيحة: المهيمن تعني المسيطر والرقيب والحافظ وهو من أسماء الله الحسنى." },
+    { t: textNusus, q: "ما سبب حزن السلحفاة كما يفهم من البيت الثاني؟", o: ["جفاف الماء", "فقد الغدير", "تغير النعمة إلى بأساء", "كل ما سبق"], corrText: "كل ما سبق", f: "💡 الإجابة الصحيحة: كل هذه الأسباب المجتمعة أدت لسوء حال السلحفاة وحزنها." },
+    { t: textNusus, q: "كيف وصفت البطتان الوادي الجديد في البيت الرابع؟", o: ["بالقريب", "بالبعيد", "بالكبير", "بالعميق"], corrText: "بالقريب", f: "💡 الإجابة الصحيحة: وصفتاه بأنه 'وادٍ قريب' كبشارة أمل لها." },
+    { t: textNusus, q: "ما هي الأداة التي ستستخدم لنقل السلحفاة؟", o: ["عود متين", "جناح البطتان", "سلة كبيرة", "حبل قوي"], corrText: "عود متين", f: "💡 الإجابة الصحيحة: اقترحت البطتان حمل 'عود متين' لتقبض عليه بفمها." },
+    { t: textNusus, q: "كلمة (الهنا) في البيت الرابع مرادفها:", o: ["الفرح والسرور", "التعب", "الخوف", "الحزن"], corrText: "الفرح والسرور", f: "💡 الإجابة الصحيحة: الهنا تعني السعادة وراحة البال والسرور." },
+    { t: textNusus, q: "الشعور السائد في البيت الرابع هو:", o: ["التفاؤل والسرور", "اليأس", "الغضب", "الدهشة"], corrText: "التفاؤل والسرور", f: "💡 الإجابة الصحيحة: يدل البيت على مشاعر التفاؤل والسرور والهنا المتبادل." },
+    { t: textNusus, q: "معنى كلمة (قضى) في البيت الأول:", o: ["حكم وأمر", "انتهى", "مات", "ذهب"], corrText: "حكم وأمر", f: "💡 الإجابة الصحيحة: قضى هنا بمعنى حكم الله وقدره النافذ." },
+    { t: textNusus, q: "ما العلاقة بين (نعمة) و (بأساء)؟", o: ["تضاد", "ترادف", "تكامل", "تشابه"], corrText: "تضاد", f: "💡 الإجابة الصحيحة: النعمة ضدها البأساء والشدة، فالعلاقة تضاد توضح المعنى." },
+    { t: textNusus, q: "لماذا وصفت البطتان العود بأنه (متين)؟", o: ["ليتحمل وزن السلحفاة", "لأنه لين", "لأنه طويل", "لأنه جميل"], corrText: "ليتحمل وزن السلحفاة", f: "💡 الإجابة الصحيحة: المتانة ضرورية وقوة العود مطلوبة لتحمل وزن السلحفاة أثناء الطيران." },
+    { t: textNusus, q: "نوع الأسلوب في قول الشاعر ( يا صاحبة ):", o: ["نداء", "أمر", "نهي", "تعجب"], corrText: "نداء", f: "💡 الإجابة الصحيحة: الأسلوب هو أسلوب نداء غرضه التودد والتحبب للصاحب." },
+    { t: textNusus, q: "الفعل (نمشي) في البيت الرابع يدل على:", o: ["الحركة والاستمرار", "السكون", "الماضي", "التوقف"], corrText: "الحركة والاستمرار", f: "💡 الإجابة الصحيحة: الفعل المضارع يفيد دائماً التجدد والاستمرار والحركة." },
+    { t: textNusus, q: "الغرض من نص (السلحفاة والبطتان) هو الحث على:", o: ["الوفاء والتعاون", "الكسل", "الخداع", "الوحدة"], corrText: "الوفاء والتعاون", f: "💡 الإجابة الصحيحة: النص يبرز بشكل أساسي قيم وفاء الأصدقاء والتعاون وقت الشدائد." },
+    { t: textNusus, q: "كلمة (فبدلت) تدل على:", o: ["التغير المفاجئ", "الثبات", "الهدوء", "الانتظار"], corrText: "التغير المفاجئ", f: "💡 الإجابة الصحيحة: الفاء عاطفة وتدل على تحول وتغير الحال السريع من النعمة للبأساء." },
 
     // النحو (18-35)
-    { t: textNahw, q: "استخرج (مفعولاً فيه) ظرف زمان:", o: ["صباحاً", "بسرعة", "رغبة", "القطار"], corrText: "صباحاً", f: "صباحاً تدل على زمن وقوع الفعل." },
-    { t: textNahw, q: "استخرج اسماً من الأسماء الخمسة:", o: ["أخيه", "غاندي", "الإنسان", "الفردتين"], corrText: "أخيه", f: "أخيه اسم من الأسماء الخمسة مجرور بالياء." },
-    { t: textNahw, q: "إعراب (يركض) في 'كان يركض':", o: ["فعل مضارع مرفوع", "فعل ماضٍ", "اسم كان", "خبر كان منصوب"], corrText: "فعل مضارع مرفوع", f: "فعل مضارع مرفوع بالضمة الظاهرة." },
-    { t: textNahw, q: "لماذا (الآباء) ليست من الأسماء الخمسة؟", o: ["لأنها جمع", "لأنها مفرد", "لأنها مضافة", "لأنها مثنى"], corrText: "لأنها جمع", f: "شرط الأسماء الخمسة أن تكون مفردة." },
-    { t: textNahw, q: "صوب الخطأ: 'جاء ذا الوجهين':", o: ["ذو", "ذي", "ذوا", "ذوو"], corrText: "ذو", f: "ذو هي الصواب لأنها فاعل مرفوع بالواو." },
-    { t: textNahw, q: "ما علامة جر الأسماء الخمسة؟", o: ["الياء", "الكسرة", "الألف", "الفتحة"], corrText: "الياء", f: "تجر الأسماء الخمسة بالياء." },
-    { t: textNahw, q: "أي الجمل التالية تحتوي على اسم من الأسماء الخمسة؟", o: ["قابلت أباك", "قابلت أبي", "جاء الإخوة", "هذان أبوان"], corrText: "قابلت أباك", f: "أباك توفرت فيها الشروط." },
-    { t: textNahw, q: "إعراب كلمة (أخيه) في الفقرة:", o: ["اسم مجرور بالياء", "اسم مجرور بالكسرة", "مضاف إليه", "نعت"], corrText: "اسم مجرور بالياء", f: "مجرور باللام وعلامة جره الياء." },
-    { t: textNahw, q: "المفعول فيه المذكور في 'سقطت أثناء صعوده' هو:", o: ["أثناء", "سقطت", "صعوده", "القطار"], corrText: "أثناء", f: "أثناء ظرف زمان." },
-    { t: textNahw, q: "كلمة (الفردتين) تعرب مفعولاً به منصوباً بـ:", o: ["الياء", "الألف", "الفتحة", "الكسرة"], corrText: "الياء", f: "منصوب بالياء لأنه مثنى." },
-    { t: textNahw, q: "الفعل (يجد) مسبوق بـ (أن) الناصبة، فيعرب:", o: ["فعل مضارع منصوب", "فعل مضارع مرفوع", "فعل مضارع مجزوم", "فعل أمر"], corrText: "فعل مضارع منصوب", f: "منصوب بالفتحة بعد أن." },
-    { t: textNahw, q: "ما الموقع الإعرابي لـ (غاندي) في 'فقال غاندي'؟", o: ["فاعل", "مفعول به", "مبتدأ", "مضاف إليه"], corrText: "فاعل", f: "هو من قام بفعل القول." },
-    { t: textNahw, q: "كلمة (قريباً) في 'رماها قريباً' تعتبر:", o: ["ظرف مكان", "ظرف زمان", "نعت", "مفعول به"], corrText: "ظرف مكان", f: "تدل على مكان الرمي." },
-    { t: textNahw, q: "في جملة 'استخدامهما'، الهاء تعود على:", o: ["الفردتين", "الفقير", "غاندي", "القطار"], corrText: "الفردتين", f: "تعود على فردتي الحذاء." },
-    { t: textNahw, q: "علامة رفع الأسماء الخمسة هي:", o: ["الواو", "الألف", "الضمة", "ثبوت النون"], corrText: "الواو", f: "ترفع بالواو (أخو، أبو...)." },
-    { t: textNahw, q: "شرط إعراب الأسماء الخمسة بالحروف أن تكون مضافة لغير:", o: ["ياء المتكلم", "كاف الخطاب", "ها الغائب", "الاسم الظاهر"], corrText: "ياء المتكلم", f: "إذا أضيفت لياء المتكلم تعرب بحركات مقدرة." },
-    { t: textNahw, q: "كلمة (إحدى) في 'إحدى فردتي حذائه' تعرب حسب موقعها:", o: ["فاعل", "مبتدأ", "خبر", "مفعول به"], corrText: "فاعل", f: "سقطت إحدى (فاعل)." },
-    { t: textNahw, q: "كلمة (فردةً) في 'يجد فردةً واحدةً' تعرب:", o: ["مفعول به", "ظرف زمان", "نعت", "حال"], corrText: "مفعول به", f: "وقع عليها فعل الفاعل (يجد)." },
+    { t: textNahw, q: "استخرج (مفعولاً فيه) ظرف زمان:", o: ["صباحاً", "بسرعة", "رغبة", "القطار"], corrText: "صباحاً", f: "💡 الإجابة الصحيحة: صباحاً ظرف زمان يبين وقت حدوث الفعل." },
+    { t: textNahw, q: "استخرج اسماً من الأسماء الخمسة:", o: ["أخيه", "غاندي", "الإنسان", "الفردتين"], corrText: "أخيه", f: "💡 الإجابة الصحيحة: أخيه اسم من الأسماء الخمسة وهو مضاف." },
+    { t: textNahw, q: "إعراب (يركض) في 'كان يركض':", o: ["فعل مضارع مرفوع", "فعل ماضٍ", "اسم كان", "خبر كان منصوب"], corrText: "فعل مضارع مرفوع", f: "💡 الإجابة الصحيحة: فعل مضارع مرفوع بالضمة، والجملة الفعلية في محل نصب خبر كان." },
+    { t: textNahw, q: "لماذا (الآباء) ليست من الأسماء الخمسة؟", o: ["لأنها جمع", "لأنها مفرد", "لأنها مضافة", "لأنها مثنى"], corrText: "لأنها جمع", f: "💡 الإجابة الصحيحة: شرط الأسماء الخمسة لتعرب بالحروف أن تكون مفردة وليست جمعاً." },
+    { t: textNahw, q: "صوب الخطأ: 'جاء ذا الوجهين':", o: ["ذو", "ذي", "ذوا", "ذوو"], corrText: "ذو", f: "💡 الإجابة الصحيحة: ذو هي الصواب لأن موقعه الإعرابي فاعل مرفوع وعلامة رفعه الواو." },
+    { t: textNahw, q: "ما علامة جر الأسماء الخمسة؟", o: ["الياء", "الكسرة", "الألف", "الفتحة"], corrText: "الياء", f: "💡 الإجابة الصحيحة: تجر الأسماء الخمسة بالياء نيابة عن الكسرة." },
+    { t: textNahw, q: "أي الجمل التالية تحتوي على اسم من الأسماء الخمسة؟", o: ["قابلت أباك", "قابلت أبي", "جاء الإخوة", "هذان أبوان"], corrText: "قابلت أباك", f: "💡 الإجابة الصحيحة: أباك توفرت فيها الشروط (مفردة ومضافة لغير ياء المتكلم)." },
+    { t: textNahw, q: "إعراب كلمة (أخيه) في الفقرة:", o: ["اسم مجرور بالياء", "اسم مجرور بالكسرة", "مضاف إليه", "نعت"], corrText: "اسم مجرور بالياء", f: "💡 الإجابة الصحيحة: اسم مجرور باللام وعلامة جره الياء لأنه من الأسماء الخمسة." },
+    { t: textNahw, q: "المفعول فيه المذكور في 'سقطت أثناء صعوده' هو:", o: ["أثناء", "سقطت", "صعوده", "القطار"], corrText: "أثناء", f: "💡 الإجابة الصحيحة: أثناء تدل على ظرف زمان المبني على المضاف بعده." },
+    { t: textNahw, q: "كلمة (الفردتين) تعرب مفعولاً به منصوباً بـ:", o: ["الياء", "الألف", "الفتحة", "الكسرة"], corrText: "الياء", f: "💡 الإجابة الصحيحة: مفعول به منصوب بالياء لأنه مثنى." },
+    { t: textNahw, q: "الفعل (يجد) مسبوق بـ (أن) الناصبة، فيعرب:", o: ["فعل مضارع منصوب", "فعل مضارع مرفوع", "فعل مضارع مجزوم", "فعل أمر"], corrText: "فعل مضارع منصوب", f: "💡 الإجابة الصحيحة: فعل مضارع منصوب بالفتحة الظاهرة بعد أداة النصب أن." },
+    { t: textNahw, q: "ما الموقع الإعرابي لـ (غاندي) في 'فقال غاندي'؟", o: ["فاعل", "مفعول به", "مبتدأ", "مضاف إليه"], corrText: "فاعل", f: "💡 الإجابة الصحيحة: غاندي فاعل مرفوع بالضمة المقدرة لأنه من قام بالفعل." },
+    { t: textNahw, q: "كلمة (قريباً) في 'رماها قريباً' تعتبر:", o: ["ظرف مكان", "ظرف زمان", "نعت", "مفعول به"], corrText: "ظرف مكان", f: "💡 الإجابة الصحيحة: قريباً تدل على مكان الرمي والمسافة المكانية." },
+    { t: textNahw, q: "في جملة 'استخدامهما'، الهاء تعود على:", o: ["الفردتين", "الفقير", "غاندي", "القطار"], corrText: "الفردتين", f: "💡 الإجابة الصحيحة: الضمير يعود على فردتي الحذاء اللتين تركهما الفقير." },
+    { t: textNahw, q: "علامة رفع الأسماء الخمسة هي:", o: ["الواو", "الألف", "الضمة", "ثبوت النون"], corrText: "الواو", f: "💡 الإجابة الصحيحة: ترفع الأسماء الخمسة بالواو (مثل: أبوك، ذو المال)." },
+    { t: textNahw, q: "شرط إعراب الأسماء الخمسة بالحروف أن تكون مضافة لغير:", o: ["ياء المتكلم", "كاف الخطاب", "ها الغائب", "الاسم الظاهر"], corrText: "ياء المتكلم", f: "💡 الإجابة الصحيحة: إذا أضيفت لياء المتكلم تعرب بحركات أصلية مقدرة وليست حروفاً." },
+    { t: textNahw, q: "كلمة ( فردة ) في جملة ( فخلع فردة حذائه الثانية ) تُعرب :", o: ["مفعول به", "فاعل", "مبتدأ", "ظرف مكان"], corrText: "مفعول به", f: "💡 الإجابة الصحيحة: تُعرب مفعول به منصوب وعلامة نصبه الفتحة لأنها وقع عليها فعل الفاعل (خلعَ)." },
+    { t: textNahw, q: "كلمة (فردةً) في 'يجد فردةً واحدةً' تعرب:", o: ["مفعول به", "ظرف زمان", "نعت", "حال"], corrText: "مفعول به", f: "💡 الإجابة الصحيحة: وقع عليها فعل الفاعل فتعرب مفعول به منصوب." },
 
     // الإملاء (36-50)
-    { t: textImla, q: "ما علامة الترقيم المناسبة بعد جملة القول (فقال له):", o: ["النقطتان :", "الفاصلة ،", "النقطة .", "الاستفهام ؟"], corrText: "النقطتان :", f: "توضع النقطتان الرأسيتان بعد القول." },
-    { t: textImla, q: "استخرج كلمة بها حرف ينطق ولا يكتب:", o: ["هذه", "الصحراء", "علامة", "رجل"], corrText: "هذه", f: "كلمة هذه بها ألف تنطق ولا تكتب." },
-    { t: textImla, q: "أي الكلمات تحوي حرفاً يكتب ولا ينطق في جملة (عمرو بن كلثوم):", o: ["عمرو", "كلثوم", "شاعر", "عظيم"], corrText: "عمرو", f: "الواو في عمرو تكتب ولا تنطق." },
-    { t: textImla, q: "صوب الخطأ: 'ادعو إلى ربك':", o: ["ادعُ", "ادعوا", "ادعى", "ادعي"], corrText: "ادعُ", f: "فعل أمر مبني على حذف حرف العلة." },
-    { t: textImla, q: "علامة الترقيم المناسبة في نهاية الفقرة:", o: ["النقطة .", "الفاصلة ،", "التعجب !", "الاستفهام ؟"], corrText: "النقطة .", f: "النقطة توضع في نهاية الجملة التامة." },
-    { t: textImla, q: "كلمة (الرجل) بها لام:", o: ["شمسية", "قمرية", "أصلية", "زائدة"], corrText: "شمسية", f: "لام شمسية لأن الراء حرف شمسي." },
-    { t: textImla, q: "ما الخطأ في كلمة 'لكن' إذا كتبت 'لاكن'؟", o: ["زيادة حرف يكتب ولا ينطق", "زيادة حرف ينطق ولا يكتب", "نقص حرف", "تغيير الحركة"], corrText: "زيادة حرف ينطق ولا يكتب", f: "الألف في لكن تنطق ولا تكتب." },
-    { t: textImla, q: "علامة الاستفهام توضع في نهاية:", o: ["الجملة الاستفهامية", "القول", "جملة التعجب", "الجملة الخبرية"], corrText: "الجملة الاستفهامية", f: "توضع بعد السؤال (لماذا تحفر؟)." },
-    { t: textImla, q: "كلمة (السماء) بها همزة:", o: ["متطرفة", "متوسطة", "وصل", "قطع"], corrText: "متطرفة", f: "همزة في نهاية الكلمة تسمى متطرفة." },
-    { t: textImla, q: "كلمة (الآن) تحتوي على:", o: ["همزة ممدودة", "همزة قطع", "همزة وصل", "همزة متوسطة"], corrText: "همزة ممدودة", f: "المدة في الآن هي أصلها همزة وألف." },
-    { t: textImla, q: "في جملة (ما هي العلامة؟)، الأداة 'ما' تستخدم لـ:", o: ["الاستفهام", "التعجب", "النفي", "الشرط"], corrText: "الاستفهام", f: "تستخدم هنا للسؤال عن غير العاقل." },
-    { t: textImla, q: "كلمة (الصحراء) منتهي بـ:", o: ["ألف ممدودة", "ألف مقصورة", "تاء مربوطة", "هاء"], corrText: "ألف ممدودة", f: "تنتهي بألف وهمزة (ألف تأنيث ممدودة)." },
-    { t: textImla, q: "كلمة (هؤلاء) بها حرف ينطق ولا يكتب، هو:", o: ["الألف", "اللام", "الواو", "الياء"], corrText: "الألف", f: "الألف بعد الهاء تنطق ولا تكتب." },
-    { t: textImla, q: "توضع علامة التعجب بعد جملة تعبر عن:", o: ["الدهشة", "السؤال", "القول", "تمام المعنى"], corrText: "الدهشة", f: "التعجب يعبر عن انفعالات النفس." },
-    { t: textImla, q: "كلمة (أولئك) بها واو:", o: ["تكتب ولا تنطق", "تنطق ولا تكتب", "مد", "أصلية"], corrText: "تكتب ولا تنطق", f: "الواو في أولئك تكتب ولا تنطق." }
+    { t: textImla, q: "ما علامة الترقيم المناسبة بعد جملة القول (فقال له):", o: ["النقطتان :", "الفاصلة ،", "النقطة .", "الاستفهام ؟"], corrText: "النقطتان :", f: "💡 الإجابة الصحيحة: توضع النقطتان الرأسيتان (:) مباشرة بعد القول ومشتقاته." },
+    { t: textImla, q: "استخرج كلمة بها حرف ينطق ولا يكتب:", o: ["هذه", "الصحراء", "علامة", "رجل"], corrText: "هذه", f: "💡 الإجابة الصحيحة: كلمة (هذه) بها ألف مد تنطق بعد الهاء ولكنها لا تكتب." },
+    { t: textImla, q: "أي الكلمات تحوي حرفاً يكتب ولا ينطق في جملة (عمرو بن كلثوم):", o: ["عمرو", "كلثوم", "شاعر", "عظيم"], corrText: "عمرو", f: "💡 الإجابة الصحيحة: الواو الفارقة في كلمة (عمرو) تكتب ولا تنطق لتفريقها عن عُمر." },
+    { t: textImla, q: "صوب الخطأ: 'ادعو إلى ربك':", o: ["ادعُ", "ادعوا", "ادعى", "ادعي"], corrText: "ادعُ", f: "💡 الإجابة الصحيحة: فعل أمر مبني على حذف حرف العلة من آخره فالصواب (ادعُ)." },
+    { t: textImla, q: "علامة الترقيم المناسبة في نهاية الفقرة التامة المعنى هي:", o: ["النقطة .", "الفاصلة ،", "التعجب !", "الاستفهام ؟"], corrText: "النقطة .", f: "💡 الإجابة الصحيحة: النقطة (.) توضع دائماً عند انتهاء الكلام وتمايز معناه." },
+    { t: textImla, q: "كلمة (الرجل) بها لام:", o: ["شمسية", "قمرية", "أصلية", "زائدة"], corrText: "شمسية", f: "💡 الإجابة الصحيحة: اللام شمسية تكتب ولا تنطق لأن الحرف بعدها مشدد (الرّجل)." },
+    { t: textImla, q: "ما الخطأ في كلمة 'لكن' إذا كتبت 'لاكن'؟", o: ["زيادة حرف يكتب ولا ينطق", "زيادة حرف ينطق ولا يكتب", "نقص حرف", "تغيير الحركة"], corrText: "زيادة حرف ينطق ولا يكتب", f: "💡 الإجابة الصحيحة: الألف في كلمة (لكن) تنطق ولا تكتب، كتابتها زيادة خاطئة." },
+    { t: textImla, q: "علامة الاستفهام توضع في نهاية:", o: ["الجملة الاستفهامية", "القول", "جملة التعجب", "الجملة الخبرية"], corrText: "الجملة الاستفهامية", f: "💡 الإجابة الصحيحة: توضع بعد السؤال مباشرة (مثل: ولماذا تحفر؟)." },
+    { t: textImla, q: "كلمة (السماء) بها همزة:", o: ["متطرفة", "متوسطة", "وصل", "قطع"], corrText: "متطرفة", f: "💡 الإجابة الصحيحة: الهمزة إذا جاءت في آخر الكلمة تسمى همزة متطرفة." },
+    { t: textImla, q: "كلمة (الآن) تحتوي على:", o: ["همزة ممدودة", "همزة قطع", "همزة وصل", "همزة متوسطة"], corrText: "همزة ممدودة", f: "💡 الإجابة الصحيحة: المدة فوق الألف هي همزة ممدودة أصلها همزة تليها ألف." },
+    { t: textImla, q: "في جملة (ما هي العلامة؟)، الأداة 'ما' تستخدم لـ:", o: ["الاستفهام", "التعجب", "النفي", "الشرط"], corrText: "الاستفهام", f: "💡 الإجابة الصحيحة: تستخدم هنا كأداة استفهام للسؤال عن غير العاقل." },
+    { t: textImla, q: "كلمة (الصحراء) منتهية بـ:", o: ["ألف ممدودة", "ألف مقصورة", "تاء مربوطة", "هاء"], corrText: "ألف ممدودة", f: "💡 الإجابة الصحيحة: تنتهي بألف تأنيث ممدودة تليها همزة على السطر." },
+    { t: textImla, q: "كلمة (هؤلاء) بها حرف ينطق ولا يكتب، هو:", o: ["الألف", "اللام", "الواو", "الياء"], corrText: "الألف", f: "💡 الإجابة الصحيحة: الألف الخنجرية بعد الهاء تنطق مدّاً ولا تخط بالقلم." },
+    { t: textImla, q: "توضع علامة التعجب بعد جملة تعبر عن:", o: ["الدهشة والاستغراب", "السؤال", "القول وفروعه", "تمام المعنى"], corrText: "الدهشة والاستغراب", f: "💡 الإجابة الصحيحة: التعجب يعبر عن المشاعر والدهشة والانفعالات النفسية الكبيرة." },
+    { t: textImla, q: "كلمة (أولئك) بها واو:", o: ["تكتب ولا تنطق", "تنطق ولا تكتب", "مد زائف", "أصلية"], corrText: "تكتب ولا تنطق", f: "💡 الإجابة الصحيحة: الواو في (أولئك) هي حرف يكتب في الكلمة الإملائية ولا ينطق." }
 ];
 
 let currentQ = 0;
 let score = 0;
 let timer;
-let currentOptions = []; // مصفوفة لتخزين خيارات السؤال الحالي بعد الخلط
-let correctAnswerIndex = 0; // مؤشر الإجابة الصحيحة الجديد بعد الخلط
+let currentOptions = []; 
+let correctAnswerIndex = 0; 
 
-// دالة خلط المصفوفات (Fisher-Yates Shuffle) لترتيب الاختيارات عشوائياً
 function shuffleArray(array) {
     let shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -152,17 +272,16 @@ function loadQuestion() {
     const quizBody = document.getElementById('quizBody');
     document.getElementById('qCurrent').innerText = currentQ + 1;
     document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('timerContainer').classList.remove('timer-warning');
     
-    // خلط الإجابات بشكل عشوائي تماماً قبل عرضها على الطالب
     currentOptions = shuffleArray(q.o);
-    // إيجاد مكان الإجابة الصحيحة الجديد بعد عملية الخلط
     correctAnswerIndex = currentOptions.indexOf(q.corrText);
     
     quizBody.innerHTML = `
         <div class="reading-text">${q.t}</div>
         <div class="question-box">❓ ${q.q}</div>
         <div class="options-grid">
-            ${currentOptions.map((opt, i) => `<button class="option-btn" onclick="checkAnswer(this, ${i})">${opt}</button>`).join('')}
+            ${currentOptions.map((opt, i) => `<button class="option-btn" onclick="checkAnswer(this, ${i})">🔹 ${opt}</button>`).join('')}
         </div>
         <div id="feedback" class="feedback"></div>
     `;
@@ -176,8 +295,15 @@ function startTimer() {
     timer = setInterval(() => {
         timeLeft--;
         document.getElementById('timer').innerText = timeLeft;
+        
+        if (timeLeft <= 10) {
+            document.getElementById('timerContainer').classList.add('timer-warning');
+            try { audioTick.play(); } catch(e) {} // تشغيل صوت التنبيه اللحظي للوقت
+        }
+        
         if(timeLeft <= 0) {
             clearInterval(timer);
+            try { audioWrong.play(); } catch(e) {}
             loadNextQuestion();
         }
     }, 1000);
@@ -195,15 +321,22 @@ function checkAnswer(btn, idx) {
 
     if(idx === correctAnswerIndex) {
         btn.classList.add('correct');
+        btn.innerHTML = "✅ " + currentOptions[idx];
         score += 2; 
         document.getElementById('score').innerText = score;
         feedback.style.background = '#e8f5e9';
         feedback.style.color = '#2e7d32';
+        feedback.style.borderLeft = '6px solid var(--success)';
+        try { audioCorrect.play(); } catch(e) {} // تشغيل صوت التصفيق والنجاح للإجابة الصحيحة
     } else {
         btn.classList.add('wrong');
+        btn.innerHTML = "❌ " + currentOptions[idx];
         buttons[correctAnswerIndex].classList.add('correct');
+        buttons[correctAnswerIndex].innerHTML = "✅ " + currentOptions[correctAnswerIndex];
         feedback.style.background = '#ffebee';
         feedback.style.color = '#c62828';
+        feedback.style.borderLeft = '6px solid var(--error)';
+        try { audioWrong.play(); } catch(e) {} // تشغيل صوت التنبيه الهادئ للإجابة الخاطئة
     }
     document.getElementById('nextBtn').style.display = 'block';
 }
@@ -218,11 +351,13 @@ function loadNextQuestion() {
 }
 
 function showResult() {
+    clearInterval(timer);
     document.getElementById('quizBody').style.display = 'none';
     document.getElementById('nextBtn').style.display = 'none';
     document.querySelector('.stats-bar').style.display = 'none';
     document.getElementById('resultPage').style.display = 'block';
     document.getElementById('finalScore').innerText = score + "%";
+    try { audioFinal.play(); } catch(e) {} // صوت النجاح الكلي للمشروع عند النهاية
 }
 
 loadQuestion();
