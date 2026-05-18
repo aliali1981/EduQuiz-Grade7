@@ -175,11 +175,127 @@
 </div>
 
 <script>
-// الروابط الصوتية المدمجة ذاتياً مجاناً ومباشرة العمل
-const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-84.wav'); // صوت نجاح وتصفيق تشجيعي قصير
-const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-84.wav'); // صوت خطأ وتنبيه هادئ
-const audioTick = new Audio('https://assets.mixkit.co/active_storage/sfx/2547/2547-84.wav'); // دقات وقت
-const audioFinal = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-84.wav'); // صوت فوز جماعي للمستويات النهائية
+// محرك الصوت الداخلي المتقدم: يقوم بتوليد صوت تصفيق جمهور حقيقي (Crowd Applause) برمجياً بالكامل
+const AudioEngine = {
+    ctx: null,
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    },
+    // دالة لتوليد ضوضاء بيضاء (الأساس الصوتي لتصفيق الجماهير)
+    createNoiseBuffer() {
+        const bufferSize = this.ctx.sampleRate * 1.5; // مدة التصفيق ثانية ونصف
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        return buffer;
+    },
+    playClap() {
+        this.init();
+        const now = this.ctx.currentTime;
+        
+        // 1. توليد صوت تصفيق الجمهور العريض (Crowd Applause Effect)
+        const noiseBuffer = this.createNoiseBuffer();
+        
+        // دمج 3 طبقات من الجماهير بترددات وأزمنة مختلفة ليعطي عمق القاعة والجمهور الحقيقي
+        for (let layer = 0; layer < 3; layer++) {
+            let noiseNode = this.ctx.createBufferSource();
+            noiseNode.buffer = noiseBuffer;
+            
+            let filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            // ترددات تحاكي أصوات ضربات الكفوف البشرية المجتمعة
+            filter.frequency.setValueAtTime(800 + (layer * 200), now); 
+            filter.Q.setValueAtTime(3, now);
+            
+            let gain = this.ctx.createGain();
+            
+            noiseNode.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            // عمل تدرج وتذبذب سريع في الصوت (Envelope) ليبدو مثل التصفيق المتواصل وليس مجرد وشوشة
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.25, now + 0.1 + (layer * 0.05));
+            
+            // إخماد تدريجي طبيعي للتصفيق عند نهايته
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2 + (layer * 0.1));
+            
+            noiseNode.start(now + (layer * 0.03));
+            noiseNode.stop(now + 1.4);
+        }
+        
+        // 2. إضافة نغمة انتصار موسيقية مبهجة مرافقة لتصفيق الجمهور
+        let winOsc = this.ctx.createOscillator();
+        let winGain = this.ctx.createGain();
+        winOsc.connect(winGain);
+        winGain.connect(this.ctx.destination);
+        winOsc.type = 'sine';
+        winOsc.frequency.setValueAtTime(523.25, now); // نغمة C5
+        winOsc.frequency.setValueAtTime(659.25, now + 0.12); // نغمة E5
+        winOsc.frequency.setValueAtTime(783.99, now + 0.24); // نغمة G5
+        winOsc.frequency.setValueAtTime(1046.50, now + 0.36); // نغمة C6 المبهجة
+        winGain.gain.setValueAtTime(0.12, now);
+        winGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        winOsc.start(now);
+        winOsc.stop(now + 0.6);
+    },
+    playWrong() {
+        this.init();
+        const now = this.ctx.currentTime;
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        // نغمة تنبيه هابطة قوية تدل على الخطأ بشكل واضح ومثير للاهتمام
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now); 
+        osc.frequency.linearRampToValueAtTime(90, now + 0.35); 
+        
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        
+        osc.start(now);
+        osc.stop(now + 0.35);
+    },
+    playTick() {
+        this.init();
+        let osc = this.ctx.createOscillator();
+        let gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(900, this.ctx.currentTime);
+        
+        gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.04);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.04);
+    },
+    playFinal() {
+        this.init();
+        // لحن نهاية تصاعدي سريع واحتفالي عند انتهاء الـ 50 سؤالاً بالكامل
+        let notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 1046.50];
+        notes.forEach((freq, i) => {
+            let osc = this.ctx.createOscillator();
+            let gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + (i * 0.08));
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime + (i * 0.08));
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + (i * 0.08) + 0.25);
+            osc.start(this.ctx.currentTime + (i * 0.08));
+            osc.stop(this.ctx.currentTime + (i * 0.08) + 0.25);
+        });
+    }
+};
 
 const textNusus = `📖 نص (السلحفاة والبطتان):
 1 - ثم قضى المهيمن القدير .. أن ينشف النبات والغدير
@@ -189,7 +305,7 @@ const textNusus = `📖 نص (السلحفاة والبطتان):
 5 - فقالتا: نحمل في كتفينا .. عوداً متيناً يابساً أو لينا`;
 
 const textNahw = `✍️ فقرة النحو (قصة غاندي):
-يُحكى أنّ المهاتما غاندي كان يركض بسرعة رغبة في اللحاق بالقطار، والذي كان قد بدأ بالتحرك صباحاً، ولكن إحدى فردتي حذائه سقطت أثناء صعوده على متن القطار، فخلع فردة حذائه الثانية، ورماها قريباً من الفردة الأولى. فقال غاندي لأخيه الإنسان: "أردتُ للفقير الذي يجد الحذاء أن يجد الفردتين كي يكون قادراً على استخدامهما، فهو لن يستفيد إن وجد فردةً واحدةً ، كما أنّني لن أستفيد منها أيضاً".`;
+يُحكى أنّ المهاتما غاندي كان يركض بسرعة رغبة في اللحاق بالقطار، والذي كان قد بدأ بالتحرك صباحاً، ولكن إحدى فردتي حذائه سقطت أثناء صعوده على متن القطار، فخلع فردة حذائه الثانية، ورماها قريباً من الفردة الأولى. فقال غاندي لأخيه الإنسان: "أردتُ للفقير الذي يجد الحذاء أن يجد الفردتين كي يكون قادراً على استخدامهما, فهو لن يستفيد إن وجد فردةً واحدةً ، كما أنّني لن أستفيد منها أيضاً".`;
 
 const textImla = `✏️ فقرة الإملاء والتلقين:
 مر رجل بآخر يحفر في الصحراء، فقال له: "ما بك أيها الرجل، ولماذا تحفر؟" قال: "إنّي دفنت في هذه الصحراء بعضاً من المال، ولست أهتدي إلى مكانه". فقال له: "كان يجب أن تجعل عليه علامة". قال: "قد فعلت". قال: "وما هي العلامة؟" قال: "غيمة في السماء كانت تظلها، ولست أرى العلامة الآن".`;
@@ -237,7 +353,7 @@ const questions = [
     // الإملاء (36-50)
     { t: textImla, q: "ما علامة الترقيم المناسبة بعد جملة القول (فقال له):", o: ["النقطتان :", "الفاصلة ،", "النقطة .", "الاستفهام ؟"], corrText: "النقطتان :", f: "💡 الإجابة الصحيحة: توضع النقطتان الرأسيتان (:) مباشرة بعد القول ومشتقاته." },
     { t: textImla, q: "استخرج كلمة بها حرف ينطق ولا يكتب:", o: ["هذه", "الصحراء", "علامة", "رجل"], corrText: "هذه", f: "💡 الإجابة الصحيحة: كلمة (هذه) بها ألف مد تنطق بعد الهاء ولكنها لا تكتب." },
-    { t: textImla, q: "أي الكلمات تحوي حرفاً يكتب ولا ينطق في جملة (عمرو بن كلثوم):", o: ["عمرو", "كلثوم", "شاعر", "عظيم"], corrText: "عمرو", f: "💡 الإجابة الصحيحة: الواو الفارقة في كلمة (عمرو) تكتب ولا تنطق لتفريقها عن عُمر." },
+    { t: textImla, q: "أي الكلمات تحوي حرفاً يكتب ولا ينطق في جملة (عمرو بن كلثوم شاعر عظيم):", o: ["عمرو", "كلثوم", "شاعر", "عظيم"], corrText: "عمرو", f: "💡 الإجابة الصحيحة: الواو الفارقة في كلمة (عمرو) تكتب ولا تنطق لتفريقها عن عُمر." },
     { t: textImla, q: "صوب الخطأ: 'ادعو إلى ربك':", o: ["ادعُ", "ادعوا", "ادعى", "ادعي"], corrText: "ادعُ", f: "💡 الإجابة الصحيحة: فعل أمر مبني على حذف حرف العلة من آخره فالصواب (ادعُ)." },
     { t: textImla, q: "علامة الترقيم المناسبة في نهاية الفقرة التامة المعنى هي:", o: ["النقطة .", "الفاصلة ،", "التعجب !", "الاستفهام ؟"], corrText: "النقطة .", f: "💡 الإجابة الصحيحة: النقطة (.) توضع دائماً عند انتهاء الكلام وتمايز معناه." },
     { t: textImla, q: "كلمة (الرجل) بها لام:", o: ["شمسية", "قمرية", "أصلية", "زائدة"], corrText: "شمسية", f: "💡 الإجابة الصحيحة: اللام شمسية تكتب ولا تنطق لأن الحرف بعدها مشدد (الرّجل)." },
@@ -296,14 +412,14 @@ function startTimer() {
         timeLeft--;
         document.getElementById('timer').innerText = timeLeft;
         
-        if (timeLeft <= 10) {
+        if (timeLeft <= 10 && timeLeft > 0) {
             document.getElementById('timerContainer').classList.add('timer-warning');
-            try { audioTick.play(); } catch(e) {} // تشغيل صوت التنبيه اللحظي للوقت
+            AudioEngine.playTick(); 
         }
         
         if(timeLeft <= 0) {
             clearInterval(timer);
-            try { audioWrong.play(); } catch(e) {}
+            AudioEngine.playWrong();
             loadNextQuestion();
         }
     }, 1000);
@@ -327,7 +443,7 @@ function checkAnswer(btn, idx) {
         feedback.style.background = '#e8f5e9';
         feedback.style.color = '#2e7d32';
         feedback.style.borderLeft = '6px solid var(--success)';
-        try { audioCorrect.play(); } catch(e) {} // تشغيل صوت التصفيق والنجاح للإجابة الصحيحة
+        AudioEngine.playClap(); // تشغيل صوت تصفيق الجمهور الضخم والانتصار برمجياً
     } else {
         btn.classList.add('wrong');
         btn.innerHTML = "❌ " + currentOptions[idx];
@@ -336,7 +452,7 @@ function checkAnswer(btn, idx) {
         feedback.style.background = '#ffebee';
         feedback.style.color = '#c62828';
         feedback.style.borderLeft = '6px solid var(--error)';
-        try { audioWrong.play(); } catch(e) {} // تشغيل صوت التنبيه الهادئ للإجابة الخاطئة
+        AudioEngine.playWrong(); // صوت الخطأ التنبيهي
     }
     document.getElementById('nextBtn').style.display = 'block';
 }
@@ -357,9 +473,10 @@ function showResult() {
     document.querySelector('.stats-bar').style.display = 'none';
     document.getElementById('resultPage').style.display = 'block';
     document.getElementById('finalScore').innerText = score + "%";
-    try { audioFinal.play(); } catch(e) {} // صوت النجاح الكلي للمشروع عند النهاية
+    AudioEngine.playFinal(); 
 }
 
+// بدء التطبيق الأول
 loadQuestion();
 </script>
 
